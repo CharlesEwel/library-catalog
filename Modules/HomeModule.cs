@@ -18,8 +18,52 @@ namespace LibraryCatalog
       };
       Get["/books/{id}"] = parameters =>
       {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        List<Author> allAuthors = Author.GetAll();
         Book selectedBook = Book.Find(parameters.id);
-        return View["book.cshtml", selectedBook];
+        List<Genre> allGenres = Genre.GetAll();
+        model.Add("genres", allGenres);
+        model.Add("book", selectedBook);
+        model.Add("authors", allAuthors);
+        return View["book.cshtml", model];
+      };
+      Post["/books/{id}"] = parameters =>
+      {
+        Book selectedBook = Book.Find(parameters.id);
+        int selectedAuthor = Request.Form["author-name"];
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        selectedBook.AddAuthor(selectedAuthor);
+        List<Author> allAuthors = Author.GetAll();
+        List<Genre> allGenres = Genre.GetAll();
+        model.Add("genres", allGenres);
+        model.Add("book", selectedBook);
+        model.Add("authors", allAuthors);
+        return View["book.cshtml", model];
+      };
+      Delete["/books/{id}"] = parameters =>
+      {
+        Book selectedBook = Book.Find(parameters.id);
+        int authorToDelete = Request.Form["author-name"];
+        selectedBook.DeleteAuthor(authorToDelete);
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        List<Author> allAuthors = Author.GetAll();
+        List<Genre> allGenres = Genre.GetAll();
+        model.Add("genres", allGenres);
+        model.Add("book", selectedBook);
+        model.Add("authors", allAuthors);
+        return View["book.cshtml", model];
+      };
+      Patch["/books/{id}"] = parameters =>
+      {
+        Book selectedBook = Book.Find(parameters.id);
+        selectedBook.Update(Request.Form["book-title"], Request.Form["publication-date"], Request.Form["new-genre"]);
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        List<Author> allAuthors = Author.GetAll();
+        List<Genre> allGenres = Genre.GetAll();
+        model.Add("genres", allGenres);
+        model.Add("book", selectedBook);
+        model.Add("authors", allAuthors);
+        return View["book.cshtml", model];
       };
       Get["/books/add"] = _ =>
       {

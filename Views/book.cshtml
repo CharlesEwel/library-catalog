@@ -2,20 +2,72 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>@Model.GetTitle()</title>
+    <title>@Model["book"].GetTitle()</title>
   </head>
   <body>
-    <h1>@Model.GetTitle()</h1>
-    <h3>@Model.GetGenre()</h3>
+    <h1>@Model["book"].GetTitle()</h1>
+    <h3>@Model["book"].GetGenre()</h3>
     <p>
-      Year Published: @Model.GetDatePublished()
+      Year Published: @Model["book"].GetDatePublished()
     </p>
     <ul>
-      @foreach(var author in Model.GetAuthors())
+      @foreach(var author in Model["book"].GetAuthors())
       {
         <li><a href="/authors/@author.GetId()">@author.GetName()</a></li>
       }
     </ul>
+    @if(Model["book"].GetAuthors().Count < Model["authors"].Count)
+    {
+      <form action='/books/@Model["book"].GetId()' method="post">
+        <label>Add Author: </label>
+        <select name="author-name">
+          @foreach(var author in Model["authors"])
+          {
+            if(!Model["book"].GetAuthors().Contains(author))
+            {
+              <option value='@author.GetId()'>@author.GetName()</option>
+            }
+          }
+        </select>
+        <button type="submit" name="button">Add</button>
+      </form>
+    }
+    @if(Model["book"].GetAuthors().Count > 0)
+    {
+      <form action="/books/@Model["book"].GetId()" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <label>Remove Author: </label>
+        <select name="author-name">
+          @foreach(var author in @Model["book"].GetAuthors())
+          {
+            <option value='@author.GetId()'>@author.GetName()</option>
+          }
+        </select>
+        <button type="submit" name="button">Remove</button>
+      </form>
+    }
+    <form class="form-group" action='/books/@Model["book"].GetId()' method="post">
+      <input type="hidden" name="_method" value="PATCH">
+      <label for="book-title">New Title:</label>
+      <input type="text" name="book-title" required value='@Model["book"].GetTitle()'>
+      <label for="publication-date">New Publication Date:</label>
+      <input type="date" name="publication-date" required value='@Model["book"].GetDatePublished()'>
+      <label for"genre">New Genre:</label>
+      <select name="new-genre">
+        @foreach(var genre in Model["genres"])
+        {
+          if(genre.GetId() == Model["book"].GetGenreId())
+          {
+            <option selected="selected" value="@genre.GetId()">@genre.GetName()</option>
+          }
+          else
+          {
+            <option value="@genre.GetId()">@genre.GetName()</option>
+          }
+        }
+      </select>
+      <button type="submit">Edit Book</button>
+    </form>
     <a href="/books">Return to Books</a>
     <a href="/">Home</a>
   </body>

@@ -262,5 +262,41 @@ namespace LibraryCatalog.Objects
       string currentGenre = genre.GetName();
       return currentGenre;
     }
+
+    public void Update(string newTitle, DateTime? newPublicationDate, int newGenreId)
+    {
+      _title = newTitle;
+      _datePublished = newPublicationDate;
+      _genreId = newGenreId;
+
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE books SET title=@NewTitle WHERE id=@BookId; UPDATE books SET year_published=@NewPublicationDate WHERE id=@BookId; UPDATE books SET genre_id=@NewGenreId WHERE id=@BookId;", conn);
+
+      SqlParameter bookIdParameter = new SqlParameter();
+      bookIdParameter.ParameterName = "@BookId";
+      bookIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(bookIdParameter);
+
+      SqlParameter titleParameter = new SqlParameter();
+      titleParameter.ParameterName = "@NewTitle";
+      titleParameter.Value = newTitle;
+      cmd.Parameters.Add(titleParameter);
+
+      SqlParameter yearParameter = new SqlParameter();
+      yearParameter.ParameterName = "@NewPublicationDate";
+      yearParameter.Value = newPublicationDate;
+      cmd.Parameters.Add(yearParameter);
+
+      SqlParameter genreParameter = new SqlParameter();
+      genreParameter.ParameterName = "@NewGenreId";
+      genreParameter.Value = newGenreId;
+      cmd.Parameters.Add(genreParameter);
+
+      cmd.ExecuteNonQuery();
+
+      if(conn!=null) conn.Close();
+    }
   }
 }

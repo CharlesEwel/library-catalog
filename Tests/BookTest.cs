@@ -10,6 +10,7 @@ namespace LibraryCatalog.Tests
   public class LibraryCatalogTests : IDisposable
   {
     DateTime? testDate = new DateTime(1990, 09, 05);
+    DateTime? testDate2 = new DateTime(2012, 12, 21);
     public LibraryCatalogTests()
     {
       DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=library_catalog_test;Integrated Security=SSPI;";
@@ -97,6 +98,20 @@ namespace LibraryCatalog.Tests
       List<Author> expectedResult = new List<Author>{secondAuthor};
       //Assert
       Assert.Equal(expectedResult, result);
+    }
+    [Fact]
+    public void Book_Update_UpdatesBook()
+    {
+      Book firstBook = new Book("Cats", testDate, 2);
+      firstBook.Save();
+
+      firstBook.Update("Crime & Punishment", testDate2, 3);
+
+      Book resultBook = Book.Find(firstBook.GetId());
+
+      Assert.Equal("Crime & Punishment", resultBook.GetTitle());
+      Assert.Equal(testDate2, resultBook.GetDatePublished());
+      Assert.Equal(3, resultBook.GetGenreId());
     }
   }
 }
