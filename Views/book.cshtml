@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>@Model.GetTitle()</title>
+  </head>
+  <body>
+    <h1>@Model.GetTitle()</h1>
+    <h3>@Model.GetGenre()</h3>
+    <p>
+      Year Published: @Model.GetDatePublished()
+    </p>
+    <ul>
+      @foreach(var author in Model.GetAuthors())
+      {
+        <li><a href="/authors/@author.GetId()">@author.GetName()</a></li>
+      }
+    </ul>
+    <a href="/books">Return to Books</a>
+    <a href="/">Home</a>
+  </body>
+</html>

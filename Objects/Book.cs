@@ -202,6 +202,28 @@ namespace LibraryCatalog.Objects
       if(conn!=null) conn.Close();
     }
 
+    public void DeleteAuthor(int authorId)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM books_authors WHERE book_id = @BookId AND author_id = @AuthorId;", conn);
+
+      SqlParameter bookIdParameter = new SqlParameter();
+      bookIdParameter.ParameterName = "@BookId";
+      bookIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(bookIdParameter);
+
+      SqlParameter authorIdParameter = new SqlParameter();
+      authorIdParameter.ParameterName = "@AuthorId";
+      authorIdParameter.Value = authorId;
+      cmd.Parameters.Add(authorIdParameter);
+
+      cmd.ExecuteNonQuery();
+
+      if(conn!=null) conn.Close();
+    }
+
     public List<Author> GetAuthors()
     {
       SqlConnection conn = DB.Connection();
@@ -231,6 +253,14 @@ namespace LibraryCatalog.Objects
       if(conn!=null) conn.Close();
 
       return foundAuthors;
+    }
+
+    public string GetGenre()
+    {
+      int genreId = this.GetGenreId();
+      Genre genre = Genre.Find(genreId);
+      string currentGenre = genre.GetName();
+      return currentGenre;
     }
   }
 }

@@ -18,6 +18,7 @@ namespace LibraryCatalog.Tests
     public void Dispose()
     {
       Book.DeleteAll();
+      Author.DeleteAll();
     }
     [Fact]
     public void Book_DatabaseEmpty()
@@ -75,6 +76,25 @@ namespace LibraryCatalog.Tests
       newBook.AddAuthor(newAuthor.GetId());
       List<Author> result = newBook.GetAuthors();
       List<Author> expectedResult = new List<Author>{newAuthor};
+      //Assert
+      Assert.Equal(expectedResult, result);
+    }
+    [Fact]
+    public void Book_DeleteAuthor()
+    {
+      //Arrange
+      Book newBook = new Book("Cats", testDate, 2);
+      newBook.Save();
+      Author firstAuthor = new Author("Chad");
+      firstAuthor.Save();
+      Author secondAuthor = new Author("Todd");
+      secondAuthor.Save();
+      newBook.AddAuthor(firstAuthor.GetId());
+      newBook.AddAuthor(secondAuthor.GetId());
+      //Act
+      newBook.DeleteAuthor(firstAuthor.GetId());
+      List<Author> result = newBook.GetAuthors();
+      List<Author> expectedResult = new List<Author>{secondAuthor};
       //Assert
       Assert.Equal(expectedResult, result);
     }

@@ -149,6 +149,37 @@ namespace LibraryCatalog.Objects
 
       if(conn!=null) conn.Close();
     }
+    public List<Book> GetBooks()
+    {
+      SqlConnection conn = DB.Connection();
+      SqlDataReader rdr = null;
+      conn.Open();
 
+      SqlCommand cmd = new SqlCommand("SELECT books.* FROM authors JOIN books_authors ON (books_authors.author_id = authors.id) JOIN books ON (books_authors.book_id = books.id) WHERE author_id = @AuthorId;", conn);
+
+      SqlParameter authorIdParameter = new SqlParameter();
+      authorIdParameter.ParameterName = "@AuthorId";
+      authorIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(authorIdParameter);
+
+      rdr=cmd.ExecuteReader();
+
+      List<Book> foundBooks = new List<Book>{};
+
+      while(rdr.Read())
+      {
+        int foundBookId = rdr.GetInt32(0);
+        string foundBookTitle = rdr.GetString(1);
+        DateTime? foundBookPublishedDate = rdr.GetDateTime(2);
+        int foundBookGenreId = rdr.GetInt32(3);
+        Book foundBook = new Book(foundBookTitle, foundBookPublishedDate, foundBookGenreId, foundBookId);
+        foundBooks.Add(foundBook);
+      }
+
+      if(rdr!=null) rdr.Close();
+      if(conn!=null) conn.Close();
+
+      return foundBooks;
+    }
   }
 }

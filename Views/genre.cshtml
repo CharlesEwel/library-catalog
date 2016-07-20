@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Books by @Model.GetName()</title>
+  </head>
+  <body>
+    <h1>Books by @Model.GetName()</h1>
+    @if(Model.GetBooks().Count==0)
+    {
+      <p>
+        No books have been added yet for this genre
+      </p>
+    }
+    else
+    {
+      <ul>
+        @foreach(var book in Model.GetBooks())
+        {
+          <li><a href="/books/@book.GetId()">@book.GetTitle()</a></li>
+        }
+      </ul>
+    }
+    <a href="/genres">Return to Genres</a>
+    <a href="/books/add">Add New Book</a>
+    <a href="/">Home</a>
+  </body>
+</html>
