@@ -6,6 +6,15 @@
   </head>
   <body>
     <h1>Welcome to our Library</h1>
+    <form action="/results" method="post">
+      <label>Search: </label>
+      <input type="text" name="search-term" value=""> <br>
+      <input type="radio" name="title-or-author" value=true checked> Search By Title
+      <input type="radio" name="title-or-author" value=false> Search By Author <br>
+      <input type="radio" name="search-type" value=true checked> Partial Match<br>
+      <input type="radio" name="search-type" value=false> Exact Match<br>
+      <button type="submit" name="button">Submit</button>
+    </form>
     <a href="/books">View All Books</a>
     <a href="/genres">View All Genres</a>
     <a href="/authors">View All Authors</a>

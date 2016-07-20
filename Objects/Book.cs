@@ -298,5 +298,90 @@ namespace LibraryCatalog.Objects
 
       if(conn!=null) conn.Close();
     }
+
+    public static List<Book> SearchForBookByTitle(string searchTerm, bool partialMatches)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM books WHERE title LIKE @SearchTerm;", conn);
+
+      SqlParameter searchTermParameter = new SqlParameter();
+      searchTermParameter.ParameterName = "@SearchTerm";
+      searchTermParameter.Value = searchTerm;
+      if(partialMatches)
+      {
+        searchTermParameter.Value = "%"+searchTerm+"%";
+      }
+      cmd.Parameters.Add(searchTermParameter);
+
+      int foundBookId = 0;
+      string foundBookTitle = null;
+      DateTime? foundBookPublishedDate = null;
+      int foundBookGenreId = 0;
+      List<Book> foundBooks = new List<Book>{};
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        foundBookId = rdr.GetInt32(0);
+        foundBookTitle = rdr.GetString(1);
+        foundBookPublishedDate = rdr.GetDateTime(2);
+        foundBookGenreId = rdr.GetInt32(3);
+        Book foundBook = new Book(foundBookTitle, foundBookPublishedDate, foundBookGenreId, foundBookId);
+        foundBooks.Add(foundBook);
+      }
+
+      if(rdr!=null) rdr.Close();
+      if(conn!=null) conn.Close();
+
+      return foundBooks;
+    }
+
+    public static List<Book> SearchForBookByAuthor(string searchTerm, bool partialMatches)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlDataReader rdr = null;
+
+      SqlCommand cmd = new SqlCommand("SELECT books.* FROM authors JOIN books_authors ON (books_authors.author_id = authors.id) JOIN books ON (books_authors.book_id = books.id) WHERE authors.name LIKE @SearchTerm;", conn);
+
+      SqlParameter searchTermParameter = new SqlParameter();
+      searchTermParameter.ParameterName = "@SearchTerm";
+      searchTermParameter.Value = searchTerm;
+      if(partialMatches)
+      {
+        searchTermParameter.Value = "%"+searchTerm+"%";
+      }
+      cmd.Parameters.Add(searchTermParameter);
+
+      int foundBookId = 0;
+      string foundBookTitle = null;
+      DateTime? foundBookPublishedDate = null;
+      int foundBookGenreId = 0;
+      List<Book> foundBooks = new List<Book>{};
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        foundBookId = rdr.GetInt32(0);
+        foundBookTitle = rdr.GetString(1);
+        foundBookPublishedDate = rdr.GetDateTime(2);
+        foundBookGenreId = rdr.GetInt32(3);
+        Book foundBook = new Book(foundBookTitle, foundBookPublishedDate, foundBookGenreId, foundBookId);
+        if(!foundBooks.Contains(foundBook))
+        {
+          foundBooks.Add(foundBook);
+        }
+      }
+
+      if(rdr!=null) rdr.Close();
+      if(conn!=null) conn.Close();
+
+      return foundBooks;
+    }
   }
 }

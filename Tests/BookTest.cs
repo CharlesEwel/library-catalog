@@ -113,5 +113,93 @@ namespace LibraryCatalog.Tests
       Assert.Equal(testDate2, resultBook.GetDatePublished());
       Assert.Equal(3, resultBook.GetGenreId());
     }
+    [Fact]
+    public void Book_FindBookByTitle()
+    {
+
+      Book newBook = new Book("Cats", testDate, 2);
+      newBook.Save();
+      Book secondBook = new Book("Cathderals", testDate, 1);
+      secondBook.Save();
+
+      List<Book> result = Book.SearchForBookByTitle("Cats", false);
+      List<Book> expectedResult = new List<Book>{newBook};
+      Assert.Equal(expectedResult, result);
+    }
+    [Fact]
+    public void Book_FindBookByTitlePartialMatch()
+    {
+
+      Book newBook = new Book("Cathedrals", testDate, 2);
+      newBook.Save();
+      Book secondBook = new Book("Other Book", testDate, 1);
+      secondBook.Save();
+
+      List<Book> result = Book.SearchForBookByTitle("Cat", true);
+      List<Book> expectedResult = new List<Book>{newBook};
+      Assert.Equal(expectedResult, result);
+    }
+    [Fact]
+    public void Book_FindBookByAuthorFullMatch()
+    {
+
+      Book newBook = new Book("Cathedrals", testDate, 2);
+      newBook.Save();
+      Book secondBook = new Book("Other Book", testDate, 1);
+      secondBook.Save();
+
+      Author newAuthor1 = new Author("Chad");
+      newAuthor1.Save();
+      Author newAuthor2 = new Author("Chadwick");
+      newAuthor2.Save();
+
+      newBook.AddAuthor(newAuthor1.GetId());
+      secondBook.AddAuthor(newAuthor2.GetId());
+
+      List<Book> result = Book.SearchForBookByAuthor("Chad", false);
+      List<Book> expectedResult = new List<Book>{newBook};
+      Assert.Equal(expectedResult, result);
+    }
+    [Fact]
+    public void Book_FindBookByAuthorPartialMatch()
+    {
+
+      Book newBook = new Book("Cathedrals", testDate, 2);
+      newBook.Save();
+      Book secondBook = new Book("Other Book", testDate, 1);
+      secondBook.Save();
+
+      Author newAuthor1 = new Author("Chad");
+      newAuthor1.Save();
+      Author newAuthor2 = new Author("Chadwick");
+      newAuthor2.Save();
+
+      newBook.AddAuthor(newAuthor1.GetId());
+      secondBook.AddAuthor(newAuthor2.GetId());
+
+      List<Book> result = Book.SearchForBookByAuthor("Cha", true);
+      List<Book> expectedResult = new List<Book>{newBook, secondBook};
+      Assert.Equal(expectedResult, result);
+    }
+    public void Book_FindBookByAuthorNoDuplicates()
+    {
+
+      Book newBook = new Book("Cathedrals", testDate, 2);
+      newBook.Save();
+      Book secondBook = new Book("Other Book", testDate, 1);
+      secondBook.Save();
+
+      Author newAuthor1 = new Author("Meredith Hartley");
+      newAuthor1.Save();
+      Author newAuthor2 = new Author("Chadwick Hartley");
+      newAuthor2.Save();
+
+      newBook.AddAuthor(newAuthor1.GetId());
+      newBook.AddAuthor(newAuthor2.GetId());
+
+      List<Book> result = Book.SearchForBookByAuthor("Hartley", true);
+      List<Book> expectedResult = new List<Book>{newBook};
+      Assert.Equal(expectedResult, result);
+    }
   }
 }

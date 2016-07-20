@@ -16,6 +16,27 @@ namespace LibraryCatalog
         List<Book> allBooks = Book.GetAll();
         return View["books.cshtml", allBooks];
       };
+      Post["/results"] = _ =>
+      {
+        string searchTerm = Request.Form["search-term"];
+        bool searchType = Request.Form["search-type"];
+        bool searchByTitle = Request.Form["title-or-author"];
+        List<Book> searchResult = new List<Book>{};
+        if(searchByTitle)
+        {
+          searchResult = Book.SearchForBookByTitle(searchTerm, searchType);
+        }
+        else
+        {
+          searchResult = Book.SearchForBookByAuthor(searchTerm, searchType);
+        }
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        model.Add("results", searchResult);
+        model.Add("priorSearchTerm", searchTerm);
+        model.Add("priorSearchType", searchType);
+        model.Add("priorSearchBy", searchByTitle);
+        return View["results.cshtml", model];
+      };
       Get["/books/{id}"] = parameters =>
       {
         Dictionary<string, object> model = new Dictionary<string, object>{};
