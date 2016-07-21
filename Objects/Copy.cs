@@ -86,7 +86,7 @@ namespace LibraryCatalog.Objects
       SqlDataReader rdr = null;
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT * FROM checkouts WHERE returned = 0;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM checkouts WHERE returned = 0 ORDER BY due_date;", conn);
 
       rdr = cmd.ExecuteReader();
       int foundPatronId=0;

@@ -2,6 +2,7 @@ using Nancy;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using LibraryCatalog.Objects;
+using System;
 
 namespace LibraryCatalog
 {
@@ -182,6 +183,26 @@ namespace LibraryCatalog
         newPatron.Save();
         List<Patron> allPatrons = Patron.GetAll();
         return View["patrons.cshtml", allPatrons];
+      };
+      Post["/patrons/checkout"] = _ =>
+      {
+        Patron selectedPatron = Patron.Find(Request.Form["patron"]);
+        DateTime today = DateTime.Today;
+        selectedPatron.CheckoutBook(Request.Form["copy"], today.AddDays(Request.Form["length-of-borrow"]));
+        return View["patron.cshtml", selectedPatron];
+      };
+      Post["/patrons/{id}/return"] = parameters =>
+      {
+        Patron selectedPatron = Patron.Find(parameters.id);
+        int bookId = Request.Form["book"];
+        selectedPatron.ReturnBook(bookId);
+        return View["patron.cshtml", selectedPatron];
+      };
+      Get["/librarian"] = _ =>
+      {
+        //Key: "patrons, copies, dueDates"
+        Dictionary<string, object> allCheckouts = Copy.GetAllCheckouts();
+        return View["librarian.cshtml", allCheckouts];
       };
     }
   }

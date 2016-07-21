@@ -433,9 +433,36 @@ namespace LibraryCatalog.Objects
       {
         conn.Close();
       }
-
       return allCopies;
     }
 
+    public List<Copy> GetCheckedOutCopies()
+    {
+      List<Copy> allCheckedOutCopies = new List<Copy>{};
+
+      Dictionary<string, object> allCheckouts = Copy.GetAllCheckouts();
+      List<Copy> allCopies = (List<Copy>) allCheckouts["copies"];
+
+      foreach(Copy copy in allCopies)
+      {
+        if(copy.GetBookId()==this.GetId())
+        {
+          allCheckedOutCopies.Add(copy);
+        }
+      }
+      return allCheckedOutCopies;
+    }
+    public List<Copy> GetInStockCopies()
+    {
+      List<Copy> inStockCopies = new List<Copy>{};
+      foreach(var copy in this.GetCopies())
+      {
+        if(!(this.GetCheckedOutCopies().Contains(copy)))
+        {
+          inStockCopies.Add(copy);
+        }
+      }
+      return inStockCopies;
+    }
   }
 }

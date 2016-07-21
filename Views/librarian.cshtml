@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    @using System;
+  </head>
+  <body>
+    <h1>Librarian</h1>
+    <h2>Overdue Books</h2>
+    <ul>
+      @for(int i=0; i< Model["copies"].Count; i++)
+      {
+        @if(DateTime.Compare(Model["dueDates"][i], DateTime.Today) < 0)
+        {
+          <li><a href='/books/@Model["copies"][i].GetBook().GetId()'>@Model["copies"][i].GetBook().GetTitle()</a> | Due Date: @Model["dueDates"][i] | Patron: <a href='/patrons/@Model["patrons"][i].GetId()'>@Model["patrons"][i].GetName()</a></li>
+        }
+      }
+    </ul>
+    <h2>Checked Out Books</h2>
+    <ul>
+      @for(int i=0; i< Model["copies"].Count; i++)
+      {
+        @if(DateTime.Compare(Model["dueDates"][i], DateTime.Today) >= 0)
+        {
+          <li><a href='/books/@Model["copies"][i].GetBook().GetId()'>@Model["copies"][i].GetBook().GetTitle()</a> | Due Date: @Model["dueDates"][i] | Patron: <a href='/patrons/@Model["patrons"][i].GetId()'>@Model["patrons"][i].GetName()</a></li>
+        }
+      }
+    </ul>
+    <a href="/">Home</a>
+    <a href="/books">View All Books</a>
+    <a href="/genres">View All Genres</a>
+    <a href="/authors">View All Authors</a>
+    <a href="/patrons">View All Patrons</a>
+  </body>
+</html>

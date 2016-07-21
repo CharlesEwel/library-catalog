@@ -69,21 +69,38 @@
       <button type="submit">Edit Book</button>
     </form>
     <p>
-      Copies in Stock: @Model["book"].GetCopies().Count
+      Copies Owned: @Model["book"].GetCopies().Count
     </p>
-    @if(@Model["book"].GetCopies().Count > 0)
+    <p>
+      Copies In Stock: @Model["book"].GetInStockCopies().Count
+    </p>
+    <p>
+      Copies Borrowed: @Model["book"].GetCheckedOutCopies().Count
+    </p>
+    @if(@Model["book"].GetInStockCopies().Count> 0)
     {
       <h1>Checkout Book</h1>
-      <form action="index.html" method="post">
+      <form action="/patrons/checkout" method="post">
+        <input type="hidden" name="copy" value='@Model["book"].GetInStockCopies()[0].GetId()' >
         <label>Patrons: </label>
-        <select>
+        <select name="patron">
         @foreach(var patron in @Model["patrons"])
         {
           <option value="@patron.GetId()">@patron.GetName()</option>
         }
         </select>
+        <input type="radio" name="length-of-borrow" value=7 checked> One Week<br>
+        <input type="radio" name="length-of-borrow" value=14> Two Weeks<br>
+        <input type="radio" name="length-of-borrow" value=21> Three Weeks<br>
         <button type="submit" name="button">Checkout Book</button>
       </form>
+    }
+    else
+    {
+    <p>
+      Sorry this book is out of stock
+      <button type="submit" disabled name="button">Checkout Book</button>
+    </p>
     }
     <a href='/books/@Model["book"].GetId()/stock'>Stock Book</a>
     <a href="/books">Return to Books</a>

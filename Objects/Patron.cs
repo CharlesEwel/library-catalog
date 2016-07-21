@@ -189,7 +189,7 @@ namespace LibraryCatalog.Objects
       SqlDataReader rdr = null;
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT copies.* FROM patrons JOIN checkouts ON (checkouts.patron_id = patrons.id) JOIN copies ON (checkouts.copy_id = copies.id) WHERE patrons.id=@PatronId AND checkouts.returned=@Returned;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT copies.* FROM patrons JOIN checkouts ON (checkouts.patron_id = patrons.id) JOIN copies ON (checkouts.copy_id = copies.id) WHERE patrons.id=@PatronId AND checkouts.returned=@Returned ORDER BY due_date;", conn);
 
       SqlParameter patronIdParameter = new SqlParameter();
       patronIdParameter.ParameterName = "@PatronId";

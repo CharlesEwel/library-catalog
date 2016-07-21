@@ -15,15 +15,28 @@
     }
     else
     {
+      <h2>Checked Out Books:</h2>
       <ul>
         @foreach(var book in Model.GetCheckOutRecord(false))
         {
-          <li><a href="/books/@book.GetBook().GetId()">@book.GetBook().GetTitle()</a> | Due Date: @Model.GetReturnDate(book.GetId())</li>
+          <li><a href="/books/@book.GetBook().GetId()"> @book.GetBook().GetTitle() </a> | Due Date: @Model.GetReturnDate(book.GetId())</li>
+          <form action="/patrons/@Model.GetId()/return" method="post">
+            <input type="hidden" name="book" value="@book.GetId()">
+            <button type="submit" name="button">Return</button>
+          </form>
+        }
+      </ul>
+
+      <h2>Checked Out History:</h2>
+      <ul>
+        @foreach(var book in Model.GetCheckOutRecord(true))
+        {
+          <li><a href="/books/@book.GetBook().GetId()"> @book.GetBook().GetTitle() </a></li>
         }
       </ul>
     }
 
-    <a href="/genres">Return to Genres</a>
+    <a href="/patrons">Return to Patrons</a>
     <a href="/books/add">Add New Book</a>
     <a href="/">Home</a>
   </body>

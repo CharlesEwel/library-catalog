@@ -216,5 +216,24 @@ namespace LibraryCatalog.Tests
 
       Assert.Equal(3, result);
     }
+    [Fact]
+    public void Book_GetCheckedOutCopies()
+    {
+      Book newBook = new Book("Cathedrals", testDate, 2);
+      newBook.Save();
+      Patron firstPatron = new Patron("Mayor McCheese");
+      firstPatron.Save();
+
+      newBook.StockBook();
+      newBook.StockBook();
+      newBook.StockBook();
+      firstPatron.CheckoutBook(newBook.GetCopies()[0].GetId(), testDate2);
+      firstPatron.CheckoutBook(newBook.GetCopies()[2].GetId(), testDate2);
+
+      List<Copy> expectedResult = new List<Copy>{newBook.GetCopies()[0], newBook.GetCopies()[2]};
+      List<Copy> result = newBook.GetCheckedOutCopies();
+
+      Assert.Equal(expectedResult, result);
+    }
   }
 }
