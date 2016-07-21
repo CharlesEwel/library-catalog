@@ -253,5 +253,43 @@ namespace LibraryCatalog.Objects
         conn.Close();
       }
     }
+
+    public DateTime? GetReturnDate(int copyId)
+    {
+
+      SqlConnection conn = DB.Connection();
+      SqlDataReader rdr = null;
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT due_date FROM checkouts WHERE patron_id=@PatronId AND copy_id = @CopyId AND checkouts.returned=0;", conn);
+
+      SqlParameter patronIdParameter = new SqlParameter();
+      patronIdParameter.ParameterName = "@PatronId";
+      patronIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(patronIdParameter);
+
+      SqlParameter copyIdParameter = new SqlParameter();
+      copyIdParameter.ParameterName = "@CopyId";
+      copyIdParameter.Value = copyId;
+      cmd.Parameters.Add(copyIdParameter);
+
+
+      rdr = cmd.ExecuteReader();
+      DateTime? foundDueDate = null;
+      while(rdr.Read())
+      {
+        foundDueDate = rdr.GetDateTime(0);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundDueDate;
+    }
   }
 }

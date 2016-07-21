@@ -117,5 +117,52 @@ namespace LibraryCatalog.Tests
       Copy expectedResult = firstBook.GetCopies()[0];
       Assert.Equal(expectedResult, result);
     }
+    [Fact]
+    public void Patron_GetDueDate_GetsDueDateOfCheckedOutBook()
+    {
+      Patron firstPatron = new Patron("Mayor McCheese");
+      firstPatron.Save();
+      Book newBook = new Book("Cats", testDate, 2);
+      newBook.Save();
+      newBook.StockBook();
+
+      firstPatron.CheckoutBook(newBook.GetCopies()[0].GetId(), testDate2);
+      DateTime? result = firstPatron.GetReturnDate(newBook.GetCopies()[0].GetId());
+      DateTime? expectedResult = testDate2;
+
+      Assert.Equal(expectedResult, result);
+    }
+    [Fact]
+    public void DateTime_TestingTodaysDate()
+    {
+      DateTime today = DateTime.Today;
+      DateTime test = new DateTime(2016, 07, 21);
+
+      Assert.Equal(today, test);
+    }
+    [Fact]
+    public void Copy_GetAllCheckouts_ReturnAllCheckoutInfo()
+    {
+      Patron firstPatron = new Patron("Mayor McCheese");
+      firstPatron.Save();
+      Book firstBook = new Book("Cats", testDate, 2);
+      firstBook.Save();
+      firstBook.StockBook();
+      Book secondBook = new Book("Dogs", testDate, 2);
+      secondBook.Save();
+      secondBook.StockBook();
+
+      firstPatron.CheckoutBook(firstBook.GetCopies()[0].GetId(), testDate2);
+      firstPatron.CheckoutBook(secondBook.GetCopies()[0].GetId(), testDate);
+
+      Dictionary<string, object> result = Copy.GetAllCheckouts();
+      List<Patron> expectedPatrons = new List<Patron>{firstPatron, firstPatron};
+      List<Copy> expectedCopies = new List<Copy>{firstBook.GetCopies()[0], secondBook.GetCopies()[0]};
+      List<DateTime?> expectedDueDates = new List<DateTime?>{testDate2, testDate};
+
+      Assert.Equal(result["patrons"], expectedPatrons);
+      Assert.Equal(result["copies"], expectedCopies);
+      Assert.Equal(result["dueDates"], expectedDueDates);
+    }
   }
 }
