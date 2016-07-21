@@ -99,6 +99,13 @@
     {
     <p>
       Sorry this book is out of stock
+      Here are the upcoming return dates that we should expect to see one come in:
+      <ul>
+        @foreach(var duedate in Model["book"].GetDueDates())
+        {
+          <li>@duedate</li>
+        }
+      </ul>
       <button type="submit" disabled name="button">Checkout Book</button>
     </p>
     }

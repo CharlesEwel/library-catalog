@@ -464,5 +464,39 @@ namespace LibraryCatalog.Objects
       }
       return inStockCopies;
     }
+    public List<DateTime?> GetDueDates()
+    {
+
+      List<DateTime?> allDueDates= new List<DateTime?>{};
+
+      SqlConnection conn = DB.Connection();
+      SqlDataReader rdr = null;
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT checkouts.* FROM books JOIN copies ON (copies.book_id = books.id) JOIN checkouts ON (copies.id = checkouts.copy_id) WHERE books.id=@BookId AND checkouts.returned=0;", conn);
+
+      SqlParameter bookParameter = new SqlParameter();
+      bookParameter.ParameterName = "@BookId";
+      bookParameter.Value = this.GetId();
+      cmd.Parameters.Add(bookParameter);
+
+      rdr = cmd.ExecuteReader();
+      DateTime? foundDueDate = null;
+      while(rdr.Read())
+      {
+        foundDueDate = rdr.GetDateTime(3);
+        allDueDates.Add(foundDueDate);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return allDueDates;
+    }
   }
 }
