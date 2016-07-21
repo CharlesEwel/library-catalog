@@ -48,6 +48,18 @@ namespace LibraryCatalog
         model.Add("authors", allAuthors);
         return View["book.cshtml", model];
       };
+      Get["/books/{id}/stock"]= parameters =>
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        List<Author> allAuthors = Author.GetAll();
+        Book selectedBook = Book.Find(parameters.id);
+        selectedBook.StockBook();
+        List<Genre> allGenres = Genre.GetAll();
+        model.Add("genres", allGenres);
+        model.Add("book", selectedBook);
+        model.Add("authors", allAuthors);
+        return View["book.cshtml", model];
+      };
       Post["/books/{id}"] = parameters =>
       {
         Book selectedBook = Book.Find(parameters.id);

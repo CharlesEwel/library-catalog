@@ -181,6 +181,7 @@ namespace LibraryCatalog.Tests
       List<Book> expectedResult = new List<Book>{newBook, secondBook};
       Assert.Equal(expectedResult, result);
     }
+    [Fact]
     public void Book_FindBookByAuthorNoDuplicates()
     {
 
@@ -200,6 +201,20 @@ namespace LibraryCatalog.Tests
       List<Book> result = Book.SearchForBookByAuthor("Hartley", true);
       List<Book> expectedResult = new List<Book>{newBook};
       Assert.Equal(expectedResult, result);
+    }
+    [Fact]
+    public void Book_StockBook_AddsCopiesWhenWeStockBook()
+    {
+      Book newBook = new Book("Cathedrals", testDate, 2);
+      newBook.Save();
+
+      newBook.StockBook();
+      newBook.StockBook();
+      newBook.StockBook();
+
+      int result = newBook.GetCopies().Count;
+
+      Assert.Equal(3, result);
     }
   }
 }

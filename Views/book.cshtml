@@ -34,7 +34,7 @@
     }
     @if(Model["book"].GetAuthors().Count > 0)
     {
-      <form action="/books/@Model["book"].GetId()" method="post">
+      <form action='/books/@Model["book"].GetId()' method="post">
         <input type="hidden" name="_method" value="DELETE">
         <label>Remove Author: </label>
         <select name="author-name">
@@ -68,6 +68,10 @@
       </select>
       <button type="submit">Edit Book</button>
     </form>
+    <p>
+      Copies in Stock: @Model["book"].GetCopies().Count
+    </p>
+    <a href='/books/@Model["book"].GetId()/stock'>Stock Book</a>
     <a href="/books">Return to Books</a>
     <a href="/">Home</a>
   </body>

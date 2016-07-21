@@ -107,7 +107,7 @@ namespace LibraryCatalog.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("DELETE FROM books; DELETE FROM books_authors;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM books; DELETE FROM books_authors; DELETE FROM copies", conn);
       cmd.ExecuteNonQuery();
     }
 
@@ -383,5 +383,59 @@ namespace LibraryCatalog.Objects
 
       return foundBooks;
     }
+    public void StockBook()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO copies (book_id) VALUES (@BookId);", conn);
+
+      SqlParameter bookIdParameter = new SqlParameter();
+      bookIdParameter.ParameterName = "@BookId";
+      bookIdParameter.Value = this.GetId();
+      cmd.Parameters.Add(bookIdParameter);
+
+      cmd.ExecuteNonQuery();
+
+      if(conn!=null) conn.Close();
+    }
+
+    public List<Copy> GetCopies()
+    {
+      List<Copy> allCopies = new List<Copy>{};
+
+      SqlConnection conn = DB.Connection();
+      SqlDataReader rdr = null;
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM copies WHERE book_id = @BookId;", conn);
+
+      SqlParameter idParameter = new SqlParameter();
+      idParameter.ParameterName = "@BookId";
+      idParameter.Value = this.GetId();
+      cmd.Parameters.Add(idParameter);
+
+      rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        int Id = rdr.GetInt32(0);
+        int bookId = rdr.GetInt32(1);
+        Copy newCopy = new Copy(Id, bookId);
+        allCopies.Add(newCopy);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
+      return allCopies;
+    }
+
   }
 }
