@@ -71,6 +71,20 @@
     <p>
       Copies in Stock: @Model["book"].GetCopies().Count
     </p>
+    @if(@Model["book"].GetCopies().Count > 0)
+    {
+      <h1>Checkout Book</h1>
+      <form action="index.html" method="post">
+        <label>Patrons: </label>
+        <select>
+        @foreach(var patron in @Model["patrons"])
+        {
+          <option value="@patron.GetId()">@patron.GetName()</option>
+        }
+        </select>
+        <button type="submit" name="button">Checkout Book</button>
+      </form>
+    }
     <a href='/books/@Model["book"].GetId()/stock'>Stock Book</a>
     <a href="/books">Return to Books</a>
     <a href="/">Home</a>

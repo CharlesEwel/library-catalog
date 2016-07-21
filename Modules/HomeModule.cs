@@ -43,6 +43,8 @@ namespace LibraryCatalog
         List<Author> allAuthors = Author.GetAll();
         Book selectedBook = Book.Find(parameters.id);
         List<Genre> allGenres = Genre.GetAll();
+        List<Patron> allPatrons = Patron.GetAll();
+        model.Add("patrons", allPatrons);
         model.Add("genres", allGenres);
         model.Add("book", selectedBook);
         model.Add("authors", allAuthors);
@@ -55,6 +57,8 @@ namespace LibraryCatalog
         Book selectedBook = Book.Find(parameters.id);
         selectedBook.StockBook();
         List<Genre> allGenres = Genre.GetAll();
+        List<Patron> allPatrons = Patron.GetAll();
+        model.Add("patrons", allPatrons);
         model.Add("genres", allGenres);
         model.Add("book", selectedBook);
         model.Add("authors", allAuthors);
@@ -68,6 +72,8 @@ namespace LibraryCatalog
         selectedBook.AddAuthor(selectedAuthor);
         List<Author> allAuthors = Author.GetAll();
         List<Genre> allGenres = Genre.GetAll();
+        List<Patron> allPatrons = Patron.GetAll();
+        model.Add("patrons", allPatrons);
         model.Add("genres", allGenres);
         model.Add("book", selectedBook);
         model.Add("authors", allAuthors);
@@ -81,6 +87,8 @@ namespace LibraryCatalog
         Dictionary<string, object> model = new Dictionary<string, object>{};
         List<Author> allAuthors = Author.GetAll();
         List<Genre> allGenres = Genre.GetAll();
+        List<Patron> allPatrons = Patron.GetAll();
+        model.Add("patrons", allPatrons);
         model.Add("genres", allGenres);
         model.Add("book", selectedBook);
         model.Add("authors", allAuthors);
@@ -93,6 +101,8 @@ namespace LibraryCatalog
         Dictionary<string, object> model = new Dictionary<string, object>{};
         List<Author> allAuthors = Author.GetAll();
         List<Genre> allGenres = Genre.GetAll();
+        List<Patron> allPatrons = Patron.GetAll();
+        model.Add("patrons", allPatrons);
         model.Add("genres", allGenres);
         model.Add("book", selectedBook);
         model.Add("authors", allAuthors);
@@ -154,7 +164,25 @@ namespace LibraryCatalog
         List<Genre> allGenres = Genre.GetAll();
         return View["genres.cshtml", allGenres];
       };
+      Get["/patrons"] = _ =>
+      {
+        List<Patron> allPatrons = Patron.GetAll();
+        return View["patrons.cshtml", allPatrons];
+      };
+      Get["/patrons/{id}"] = parameters =>
+      {
+        Patron selectedPatron = Patron.Find(parameters.id);
+        return View["patron.cshtml", selectedPatron];
+      };
+      Get["/patrons/new"] = _ =>  View["patron_new.cshtml"];
 
+      Post["/patrons"] = _ =>
+      {
+        Patron newPatron = new Patron(Request.Form["name"]);
+        newPatron.Save();
+        List<Patron> allPatrons = Patron.GetAll();
+        return View["patrons.cshtml", allPatrons];
+      };
     }
   }
 

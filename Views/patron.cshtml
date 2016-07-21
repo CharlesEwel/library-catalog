@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Books by @Model.GetName()</title>
+  </head>
+  <body>
+    <h1>@Model.GetName()</h1>
+
+    @if(Model.GetCheckOutRecord(false).Count==0)
+    {
+      <p>
+        You have no checked out books.
+      </p>
+    }
+    else
+    {
+      <ul>
+        @foreach(var book in Model.GetCheckOutRecord(false))
+        {
+          <li><a href="/books/@book.GetBook().GetId()">@book.GetBook().GetTitle()</a> | Due Date: @Model.GetReturnDate(book.GetId())</li>
+        }
+      </ul>
+    }
+
+    <a href="/genres">Return to Genres</a>
+    <a href="/books/add">Add New Book</a>
+    <a href="/">Home</a>
+  </body>
+</html>

@@ -22,12 +22,11 @@ namespace LibraryCatalog.Objects
     {
       return _bookId;
     }
-    public string GetBook()
+    public Book GetBook()
     {
       int bookId = this.GetBookId();
       Book book = Book.Find(bookId);
-      string currentBook = book.GetTitle();
-      return currentBook;
+      return book;
     }
 
     public override bool Equals(System.Object otherCopy)

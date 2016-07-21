@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>All Patrons</h1>
+    @if(Model.Count==0)
+    {
+      <p>
+        No patrons have been added yet
+      </p>
+    }
+    else
+    {
+      <ul>
+        @foreach(var patron in Model)
+        {
+          <li><a href="/patrons/@patron.GetId()">@patron.GetName()</a></li>
+        }
+      </ul>
+    }
+    <a href="/patrons/new">Add Patron</a>
+  </body>
+</html>
