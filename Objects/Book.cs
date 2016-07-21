@@ -421,7 +421,7 @@ namespace LibraryCatalog.Objects
       {
         int Id = rdr.GetInt32(0);
         int bookId = rdr.GetInt32(1);
-        Copy newCopy = new Copy(Id, bookId);
+        Copy newCopy = new Copy(bookId, Id);
         allCopies.Add(newCopy);
       }
 
