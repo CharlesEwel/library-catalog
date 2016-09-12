@@ -1,8 +1,10 @@
 # Title - Epicodus C# Project Template
 
 #### Short Description
+This project emulates a catalgoue for a hypothetical library. Users may checkout books and return them, and librarians may order new books and view the return dates for already checked out books.
 
 #### Author(s)
+Charles Ewel and Ben Logue
 
 ## Description
 
@@ -14,14 +16,6 @@ A basic project template for C# webapps using Nancy/Razor, XUnit, and MSSQL.
 * Nancy and Razor View Engines
 * XUnit
 * MSSQL
-
-## Instructions for using Template
-
-* Clone the repository
-* Delete the .git directory, then > git init
-* Add your own filenames, database names, and namespaces in HomeModule, Database.cs, TESTNAME.cs, and Startup.cs
-* Fill in your own information in README.md
-
 
 ## Instructions
 
@@ -36,7 +30,7 @@ None
 
 ## Contacts
 
-
+Charles.Ewel@gmail.com
 
 ### License
 
